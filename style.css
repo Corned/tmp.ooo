@@ -1,0 +1,30 @@
+* {
+  padding: 0;
+  margin: 0;
+  color: black;
+  font-family: monospace;
+}
+
+body {
+  margin: 0 20px;
+}
+
+h1 {
+  margin: 20px 0;
+}
+
+#links {
+  display: flex;
+  flex-direction: column;
+}
+
+#links a {
+  margin-right: auto;
+}
+
+#links a:hover::before {
+  content: ">";
+  display: inline-block;
+  text-decoration: none;
+  margin-right: 7px;
+}
