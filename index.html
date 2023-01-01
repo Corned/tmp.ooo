@@ -9,11 +9,30 @@
 
 </head>
 <body>
-  <h1>tmp.ooo</h1>
   <div id="links">
-    
-    <br/>
+    <a href="https://couchpotatoes.team/">couch potatoes</a>
     <a href="https://dungeons.tmp.ooo/">dungeons</a>
+
+    <p id="blink">tmp.ooo></p>
   </div>
+
+  <script>
+    window.addEventListener("load", () => {
+      const blinker = document.getElementById("blink")
+
+      let index = 0
+      setInterval(() => {
+        index += 1
+        index %= 2
+
+        if (index === 0) {
+          blinker.textContent = "tmp.ooo>_"
+        } else {
+          blinker.textContent = "tmp.ooo>"
+        }
+      }, 700)
+    })
+  </script>
+
 </body>
 </html>
