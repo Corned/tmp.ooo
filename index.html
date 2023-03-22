@@ -8,13 +8,16 @@
   <link rel="stylesheet" href="style.css"/>
 
 </head>
-<body>
-  <div id="links">
-    <a href="https://couchpotatoes.team/">couch potatoes</a>
-    <a href="https://dungeons.tmp.ooo/">dungeons</a>
-    <a href="https://gio.tmp.ooo/">gio's stories</a>
+<body>  
+  <div class="terminal">
 
-    <p id="blink">tmp.ooo></p>
+    <div class="terminal__content">
+      <a href="https://couchpotatoes.team/">couch potatoes</a>
+      <a href="https://dungeons.tmp.ooo/">dungeons</a>
+  
+      <p id="blink">tmp.ooo></p>
+    </div>
+
   </div>
 
   <script>
@@ -31,7 +34,7 @@
         } else {
           blinker.textContent = "tmp.ooo>"
         }
-      }, 700)
+      }, 530)
     })
   </script>
 

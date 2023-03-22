@@ -15,41 +15,50 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+  background-color: rgba(230, 230, 230, 1);
+  overflow: hidden;
 }
 
 h1 {
   margin: 20px 0;
 }
 
-#links {
-  display: flex;
-  flex-direction: column;
+.terminal {
+  position: relative;
 
   width: 300px;
   max-width: 90vw !important;
   margin: 0 auto;
 
-  background-color: rgb(5, 5, 5);
-  padding: 20px;
+  background-color: rgba(5, 5, 5, 1);
 
   box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
 }
 
-#links * {
+
+.terminal__content {
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal__content * {
   color: white;
 }
 
-#links a {
+.terminal__content a {
   margin-right: auto;
 }
 
-#links a:hover::before {
+.terminal__content a:hover::before {
   content: ">";
   display: inline-block;
   text-decoration: none;
   margin-right: 7px;
 }
 
-#links #blink {
+.terminal__content #blink {
   margin-top: 20px;
 }
