@@ -8,34 +8,47 @@
   <link rel="stylesheet" href="style.css"/>
 
 </head>
-<body>  
-  <div class="terminal">
+<body>
+  <div class="terminal" id="terminal">
 
-    <div class="terminal__content">
-      <a href="https://couchpotatoes.team/">couch potatoes</a>
+    <div class="terminal__content" id="terminal__content">
+      <a href="https://couchpotatoes.team/" targ>couch potatoes</a>
       <a href="https://dungeons.tmp.ooo/">dungeons</a>
-  
-      <p id="blink">tmp.ooo></p>
     </div>
-
+  
+    <div class="terminal__input">
+      <span>tmp.ooo></span>
+      <form id="form">
+        <label for="blink" style="display:none">.</label>
+        <input type="text" id="blink" spellcheck="false"/>
+      </form>
+    </div>
   </div>
 
   <script>
     window.addEventListener("load", () => {
       const blinker = document.getElementById("blink")
+      document.getElementById("terminal").classList.add("center")
 
-      let index = 0
-      setInterval(() => {
-        index += 1
-        index %= 2
+      blinker.focus()
 
-        if (index === 0) {
-          blinker.textContent = "tmp.ooo>_"
-        } else {
-          blinker.textContent = "tmp.ooo>"
-        }
-      }, 530)
+      document.getElementById("form").addEventListener("submit", function(event) {
+        event.preventDefault()
+
+        const command = blinker.value
+        blinker.value = ""
+
+
+        const element = document.createElement("p")
+        element.textContent = command
+        
+        document.getElementById("terminal__content").appendChild(element)
+
+
+        return false
+      })
     })
+    
   </script>
 
 </body>
