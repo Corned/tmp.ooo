@@ -29,7 +29,8 @@ h1 {
   opacity: 0;
 
   min-width: 700px;
-  max-width: 700px;
+  max-width: 900px;
+  max-height: 600px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -61,7 +62,6 @@ h1 {
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
-  max-height: 400px;
 }
 
 .terminal__output::-webkit-scrollbar {
@@ -85,18 +85,25 @@ h1 {
   margin-right: 7px;
 }
 
-.terminal__output .output__message {
 
-}
 
-.terminal__output .output__message.error {
+.terminal__output .message-error {
   color: rgb(255, 45, 45);
+  text-shadow: 0px 0px 2px rgba(255, 45, 45, 0.4);
   font-weight: bold;
 }
 
-.terminal__output .output__message.bold {
-  font-weight: bold;
+.terminal__output .message-button {
+  text-decoration: underline;
 }
+
+.terminal__output .message-button:hover {
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+
+
 
 
 .terminal__input {
