@@ -52,7 +52,7 @@ window.addEventListener("load", () => {
     } else if (command === "cat") {
       RunCommand(cat, rest)
     } else if (command === "clear") {
-      RunCommand(clear)
+      RunCommand(clearTerminal)
     } else if (command === "start") {
       RunCommand(start)
     } else {

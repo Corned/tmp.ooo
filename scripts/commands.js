@@ -1,12 +1,14 @@
 const RunCommand = (command, params) => {
-
   const promise = new Promise((resolve, reject) => {
     command(resolve, reject, params)
   })
 
   promise
     .then(() => {
-      log(" ")
+      // TODO: fix bandaid fix
+      if (command.name !== "clearTerminal") {
+        log(" ")
+      }
     })
     .catch((errorMessage) => {
       error(errorMessage)
@@ -44,7 +46,7 @@ const intro = (resolve, reject, params) => {
 const help = (resolve, reject, params) => {
   log([ fragment_button("help", "SimulateCommand(help)"), fragment_text("\tLists all available commands") ])
   log([ fragment_button("intro", "SimulateCommand(intro)"), fragment_text("\tDisplays the starting message") ])
-  log([ fragment_button("clear", "SimulateCommand(clear)"), fragment_text("\tClears the terminal") ])
+  log([ fragment_button("clear", "SimulateCommand(clearTerminal)"), fragment_text("\tClears the terminal") ])
   log([ fragment_button("ls", "SimulateCommand(ls)"), fragment_text("\tLists files in current directory") ])
   log([ fragment_text("cat\tReads contents of a file") ])
 
@@ -77,7 +79,7 @@ const cat = (resolve, reject, [ path ]) => {
     })
 }
 
-const clear = (resolve, reject) => {
+const clearTerminal = (resolve, reject) => {
   const output = document.getElementById("terminal__output")
   output.innerHTML = ""
 
