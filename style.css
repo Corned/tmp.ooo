@@ -28,8 +28,8 @@ h1 {
   transform: translateX(-50%) translateY(-50%);
   opacity: 0;
 
-  width: 500px;
-  max-width: 90vw !important;
+  min-width: 700px;
+  max-width: 700px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -55,27 +55,47 @@ h1 {
 }
 
 
-.terminal__content {
-  padding: 20px;
+.terminal__output {
+  padding: 20px 20px 0 20px;
 
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+  max-height: 400px;
 }
 
-.terminal__content * {
+.terminal__output::-webkit-scrollbar {
+  display: none;
+}
+
+.terminal__output * {
   color: white;
   white-space: break-spaces;
+  overflow-wrap: anywhere;
 }
 
-.terminal__content a {
+.terminal__output a {
   margin-right: auto;
 }
 
-.terminal__content a:hover::before {
+.terminal__output a:hover::before {
   content: ">";
   display: inline-block;
   text-decoration: none;
   margin-right: 7px;
+}
+
+.terminal__output .output__message {
+
+}
+
+.terminal__output .output__message.error {
+  color: rgb(255, 45, 45);
+  font-weight: bold;
+}
+
+.terminal__output .output__message.bold {
+  font-weight: bold;
 }
 
 
@@ -92,7 +112,7 @@ h1 {
   flex-grow: 2;
 }
 
-.terminal__input #form  #blink {
+.terminal__input #form  #terminal-input {
   padding: 0;
 
   background-color: transparent;
@@ -102,6 +122,8 @@ h1 {
   min-width: 100%;
 }
 
-#blink:focus {
+#terminal-input:focus {
   outline: none;
 }
+
+

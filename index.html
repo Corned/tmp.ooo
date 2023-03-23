@@ -11,39 +11,86 @@
 <body>
   <div class="terminal" id="terminal">
 
-    <div class="terminal__content" id="terminal__content">
-      <a href="https://couchpotatoes.team/" targ>couch potatoes</a>
-      <a href="https://dungeons.tmp.ooo/">dungeons</a>
+    <div class="terminal__output" id="terminal__content">
     </div>
   
     <div class="terminal__input">
       <span>tmp.ooo></span>
       <form id="form">
-        <label for="blink" style="display:none">.</label>
-        <input type="text" id="blink" spellcheck="false"/>
+        <label for="terminal-input" style="display:none">.</label>
+        <input type="text" id="terminal-input" spellcheck="false"/>
       </form>
     </div>
   </div>
 
   <script>
+    // stop reading, im just throwing stuff together rn
+    function createMessage(text, classes = []) {
+      const element = document.createElement("p")
+      element.classList.add("output__message", ...classes)
+      element.textContent = text
+      
+      document.getElementById("terminal__content").appendChild(element)
+      document.getElementById("terminal__content").scrollTo(0, document.getElementById("terminal__content").scrollHeight)
+    }
+
+    function createClickable(text, href, classes = []) {
+      const element = document.createElement("a")
+      element.classList.add("output__message", ...classes)
+      element.textContent = text
+      element.href = href
+      
+      document.getElementById("terminal__content").appendChild(element)
+      document.getElementById("terminal__content").scrollTo(0, document.getElementById("terminal__content").scrollHeight)
+    }
+
     window.addEventListener("load", () => {
-      const blinker = document.getElementById("blink")
+      const input = document.getElementById("terminal-input")
       document.getElementById("terminal").classList.add("center")
 
-      blinker.focus()
+      createMessage("tmp.ooo online! Type \"help\" to get started.", ["bold"])
+      createMessage(" ")
+
+      input.focus()
 
       document.getElementById("form").addEventListener("submit", function(event) {
         event.preventDefault()
 
-        const command = blinker.value
-        blinker.value = ""
+        const commandString = input.value
+        const [ command, ...rest ] = commandString.split(" ")
+        input.value = ""
 
+        createMessage(`tmp.ooo> ${commandString}`)
 
-        const element = document.createElement("p")
-        element.textContent = command
+        if (command === "help") {
+          createMessage("List of available commands")
+          createMessage("help\tLists all available commands")
+          createMessage("ls\tLists files in current directory")
+          createMessage("cat\tReads contents of a file")
+          createMessage(" ")
+        } else if (command === "ls") {
+          createMessage("passwords.txt\tprojects.txt")
+          createMessage(" ")
+        } else if (command === "cat") {
+          fetch(`/filesystem/${rest}`)
+            .then((response) => {
+              if (response.ok) return response.text()
+              throw new Error(`Could not read file "${rest}".`)
+            })
+            .then((text) => {
+              createMessage(text)
+              createMessage(" ")
+            })
+            .catch((err) => {
+              console.log(err.message)
+              createMessage(err.message, ["error"])
+              createMessage(" ")
+            })
+        } else {
+          createMessage(`The term "${command}" is not recognized as a valid command.`, ["error"] )
+          createMessage(" ")
+        }
         
-        document.getElementById("terminal__content").appendChild(element)
-
 
         return false
       })
