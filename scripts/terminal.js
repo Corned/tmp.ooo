@@ -53,8 +53,8 @@ window.addEventListener("load", () => {
       RunCommand(cat, rest)
     } else if (command === "clear") {
       RunCommand(clearTerminal)
-    } else if (command === "start") {
-      RunCommand(start)
+    } else if (command === "intro") {
+      RunCommand(intro)
     } else {
       RunCommand(notFound, command)
     }
