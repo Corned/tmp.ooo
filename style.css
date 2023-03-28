@@ -78,12 +78,12 @@ h1 {
   margin-right: auto;
 }
 
-.terminal__output a:hover::before {
+/* .terminal__output a:hover::before {
   content: ">";
   display: inline-block;
   text-decoration: none;
   margin-right: 7px;
-}
+} */
 
 
 
@@ -93,11 +93,11 @@ h1 {
   font-weight: bold;
 }
 
-.terminal__output .message-button {
+.terminal__output .message-button, .terminal__output .message-link {
   text-decoration: underline;
 }
 
-.terminal__output .message-button:hover {
+.terminal__output .message-button:hover, .terminal__output .message-link:hover  {
   cursor: pointer;
   text-transform: uppercase;
 }

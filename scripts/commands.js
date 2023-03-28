@@ -11,8 +11,7 @@ const RunCommand = (command, params) => {
       }
     })
     .catch((errorMessage) => {
-      error(errorMessage)
-      log(" ")
+      throw errorMessage
     })
 }
 
@@ -39,16 +38,25 @@ const intro = (resolve, reject, params) => {
 
   log(` /~____  =ø= /`)
   log(`(______)__m_m)   The cat says it's ${moment().format("dddd")} my dudes!`)
+  
+  log([
+    fragment_text(`                 Try out `),
+    fragment_link("Asteroids", `/asteroids.html`),
+    fragment_text(` and check the `),
+    fragment_link("Couch Potatoes", `https://couchpotatoes.team/`),
+    fragment_text(` website!`)
+  ])
 
   resolve()
 }
 
 const help = (resolve, reject, params) => {
-  log([ fragment_button("help", "SimulateCommand(help)"), fragment_text("\tLists all available commands") ])
-  log([ fragment_button("intro", "SimulateCommand(intro)"), fragment_text("\tDisplays the starting message") ])
-  log([ fragment_button("clear", "SimulateCommand(clearTerminal)"), fragment_text("\tClears the terminal") ])
-  log([ fragment_button("ls", "SimulateCommand(ls)"), fragment_text("\tLists files in current directory") ])
-  log([ fragment_text("cat\tReads contents of a file") ])
+  log([ fragment_button("help", "SimulateCommand(help)"), fragment_text("\t\tLists all available commands") ])
+  log([ fragment_button("intro", "SimulateCommand(intro)"), fragment_text("\t\tDisplays the starting message") ])
+  log([ fragment_button("clear", "SimulateCommand(clearTerminal)"), fragment_text("\t\tClears the terminal") ])
+  log([ fragment_button("ls", "SimulateCommand(ls)"), fragment_text("\t\tLists files in current directory") ])
+  log([ fragment_text("cat\t\tReads contents of a file") ])
+  log([ fragment_text("parse-flags\tFlag parser demo") ])
 
   resolve()
 }
@@ -61,7 +69,7 @@ const ls = (resolve, reject, params) => {
 
 const cat = (resolve, reject, [ path ]) => {
   if (!path) {
-    reject("No path provided")
+    reject(new Error("No path provided"))
     return
   }
 
@@ -75,7 +83,7 @@ const cat = (resolve, reject, [ path ]) => {
       resolve()
     })
     .catch((err) => {
-      reject(err.message)
+      reject(err)
     })
 }
 
@@ -86,8 +94,14 @@ const clearTerminal = (resolve, reject) => {
   resolve()
 }
 
-const notFound = (resolve, reject, command) => {
-  reject(`The term "${command}" is not recognized as a valid command.` )
+const parseFlags = (resolve, reject, input) => {
+  const output = JSON.stringify(flagParser(input))
+
+  log(output)
 
   resolve()
+}
+
+const notFound = (resolve, reject, command) => {
+  reject(`The term "${command}" is not recognized as a valid command.` )
 }
