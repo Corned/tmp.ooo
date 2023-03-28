@@ -6,18 +6,36 @@ const context = canvas.getContext("2d")
 const size = 800
 const mid = size / 2
 
-const makeAsteroid = (position, radius, smoothness, quality) => {
-  const edgePoints = []
-  for (let i = -Math.PI; i < Math.PI; i += Math.PI/quality * 2) {
-    edgePoints.push(
-      new Vector(
-        radius * Math.cos(i),
-        radius * Math.sin(i),
-      ).mul(0.9 + Math.random() * smoothness).add(position)
-    )
+class Asteroid {
+  constructor(position, radius, corners, smoothness) {
+    this.position = position
+    this.radius = radius
+    this.corners = corners
+    this.smoothness = smoothness
+
+    this.rotation = 0
+    this.rotVelocity = Math.random() / 10 - 0.05
+    this.velocity = new Vector(Math.random() - 0.5, Math.random() - 0.5)
+
+    this.edgePoints = []
+    for (let i = -Math.PI; i < Math.PI; i += Math.PI/this.corners * 2) {
+      this.edgePoints.push(
+        new Vector(
+          radius * Math.cos(i),
+          radius * Math.sin(i),
+        ).mul(1 + Math.random())
+      )
+    }
   }
 
-  shape(context, ...edgePoints)
+  update() {
+    this.position = this.position.add(this.velocity)
+    this.rotation = this.rotation + this.rotVelocity
+  }
+
+  draw(ctx) {
+    shape(ctx, ...this.edgePoints.map(point => point.add(this.position)))
+  }
 }
 
 
@@ -64,6 +82,46 @@ class Particle {
   }
 }
 
+
+class Bullet {
+  constructor(position, velocity, radius) {
+    this.position = position
+    this.velocity = velocity
+    this.radius = radius
+    this.delete = false
+  }
+
+  update() {
+    this.position = this.position.add(this.velocity)
+
+    if (this.position.x < 0) {
+      this.delete = true  
+    }
+    if (this.position.x > 800) {
+      this.delete = true
+    }
+    if (this.position.y < 0) {
+      this.delete = true
+    }
+    if (this.position.y > 800) {
+      this.delete = true
+    }
+  }
+
+  draw(ctx) {
+    if (this.delete) return
+
+
+    console.log("DRAW BULLET");
+
+    ctx.fillStyle = "white"
+    ctx.beginPath()
+    ctx.arc(this.position.x, this.position.y, this.radius, 0, 2*Math.PI)
+    ctx.fill()
+    console.log("END");
+  }
+}
+
 class Ship {
   constructor() {
     this.position = new Vector(400, 400)
@@ -73,11 +131,38 @@ class Ship {
     this.acceleration = 0.1
     this.rotVelocity = 0
     this.particles = []
+    this.bullets = []
+    this.lastShot = 0
+    this.bulletInterval = 100
     this.maxSpeed = 5
   }
 
   update(keys) {
     this.rotVelocity = 0
+    if (keys[" "]) {
+      if (this.lastShot + this.bulletInterval < Date.now()) {
+        this.lastShot = Date.now()
+
+        // take a shot
+        const dist = new Vector(0, -1)
+        const loc = this.position.add(
+          new Vector(
+            dist.x * Math.cos(this.rotation) - dist.y * Math.sin(this.rotation),
+            dist.y * Math.cos(this.rotation) + dist.x * Math.sin(this.rotation)
+          ).mul(20)
+        )
+
+        const dir = this.position
+          .sub(loc)
+          .unit
+          .mul(-5) // bullet speed
+
+        const bullet = new Bullet(loc, dir, 2)
+        console.log(bullet);
+
+        this.bullets.push(bullet)
+      }
+    }
 
     if (keys["ArrowLeft"]) {
       this.rotVelocity += -0.05
@@ -154,7 +239,17 @@ class Ship {
     this.rotation += this.rotVelocity
 
 
-    
+    this.bullets = this.bullets.map((bullet) => {
+      bullet.update()
+
+      if (bullet.delete) {
+        bullet = null
+        return null
+      }
+
+      bullet.draw(context)
+      return bullet
+    }).filter(o => !!o)
 
     this.particles = this.particles.map((particle) => {
       particle.update()
@@ -230,22 +325,30 @@ window.addEventListener("keyup", (event) => {
 })
 
 const ship = new Ship()
-let particles = []  
+let particles = []
+let asteroids = [ new Asteroid(new Vector(400, 100), 20, 10, 5)  ]
 
 
 
 setInterval(() => {
-  // logic
-  ship.update(keys)
-  
-  // render
   context.fillStyle = "black"
   context.clearRect(0, 0, canvas.width, canvas.height)
 
 
+  // logic
+  ship.update(keys)
 
+  for (const asteroid of asteroids) {
+    asteroid.update()
+  }
+  
+  // render
   
   ship.draw(context)
+  for (const asteroid of asteroids) {
+    asteroid.draw(context)
+  }
+
 }, 1000 / 60)
 
 
