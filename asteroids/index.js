@@ -75,7 +75,13 @@ class Particle {
     if (this.delete) return
     const transparency = 1 - (Date.now() - this.birth) / this.lifetime
 
-    ctx.fillStyle = `rgba(255, 255, 255, ${transparency})`
+    const fillStyles = [
+      `rgba(255, 0, 0, ${transparency})`,
+      `rgba(255, 255, 0, ${transparency})`,
+      `rgba(255, 255, 200, ${transparency})`,
+    ]
+
+    ctx.fillStyle = fillStyles[Math.floor(Math.random() * fillStyles.length)]
     ctx.beginPath()
     ctx.arc(this.position.x, this.position.y, this.radius, 0, 2*Math.PI)
     ctx.fill()
@@ -111,14 +117,10 @@ class Bullet {
   draw(ctx) {
     if (this.delete) return
 
-
-    console.log("DRAW BULLET");
-
     ctx.fillStyle = "white"
     ctx.beginPath()
     ctx.arc(this.position.x, this.position.y, this.radius, 0, 2*Math.PI)
     ctx.fill()
-    console.log("END");
   }
 }
 
@@ -206,7 +208,7 @@ class Ship {
         const dir = this.position
         .sub(loc2)
         .unit
-        .mul(-this.maxSpeed)
+        .mul(-this.maxSpeed - Math.random())
 
         const newParticle = new Particle(
           loc,
