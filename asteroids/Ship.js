@@ -92,9 +92,6 @@ class Ship {
         )
     
         this.particles.push(newParticle)
-          
-
-
       }
     }
 
@@ -123,7 +120,6 @@ class Ship {
         return null
       }
 
-      bullet.draw(context)
       return bullet
     }).filter(o => !!o)
 
@@ -135,7 +131,6 @@ class Ship {
         return null
       }
 
-      particle.draw(context)
       return particle
     }).filter(o => !!o)
   }
@@ -173,6 +168,11 @@ class Ship {
     for (const particle of this.particles) {
       particle.draw(ctx)
     }
+
+    for (const bullet of this.bullets) {
+      bullet.draw(ctx)
+    }
+  
   }
 
     
