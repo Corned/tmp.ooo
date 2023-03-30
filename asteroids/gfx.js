@@ -1,5 +1,7 @@
 const shape = (ctx, color = "rgb(255, 255, 255)", ...points) => {
   ctx.fillStyle = color
+  ctx.strokeStyle = color
+  ctx.lineWidth = 2
 
   ctx.beginPath()
   ctx.moveTo(points[0].x, points[0].y)
@@ -9,7 +11,7 @@ const shape = (ctx, color = "rgb(255, 255, 255)", ...points) => {
   }
 
   
-  ctx.moveTo(points[0].x, points[0].y)
+  ctx.lineTo(points[0].x, points[0].y)
 
   ctx.fill()
 }

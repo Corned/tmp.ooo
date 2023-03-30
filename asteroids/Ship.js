@@ -9,8 +9,8 @@ class Ship {
     this.particles = []
     this.bullets = []
     this.lastShot = 0
-    this.bulletInterval = 100
-    this.maxSpeed = 5
+    this.bulletInterval = 1000 / 3
+    this.maxSpeed = 4
   }
 
   update(keys) {
