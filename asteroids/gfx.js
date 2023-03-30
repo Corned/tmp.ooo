@@ -1,5 +1,5 @@
-const shape = (ctx, ...points) => {
-  ctx.fillStyle = "rgb(255, 255, 255)"
+const shape = (ctx, color = "rgb(255, 255, 255)", ...points) => {
+  ctx.fillStyle = color
 
   ctx.beginPath()
   ctx.moveTo(points[0].x, points[0].y)

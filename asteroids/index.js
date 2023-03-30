@@ -41,6 +41,10 @@ setInterval(() => {
   ship.update(keys)
   for (const asteroid of asteroids) {
     asteroid.update()
+    
+    for (const bullet of ship.bullets) {
+      asteroid.collidesWith(bullet)
+    }
   }
   
   // render

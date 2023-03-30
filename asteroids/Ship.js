@@ -15,29 +15,28 @@ class Ship {
 
   update(keys) {
     this.rotVelocity = 0
-    if (keys[" "]) {
-      if (this.lastShot + this.bulletInterval < Date.now()) {
-        this.lastShot = Date.now()
 
-        // take a shot
-        const dist = new Vector(0, -1)
-        const loc = this.position.add(
-          new Vector(
-            dist.x * Math.cos(this.rotation) - dist.y * Math.sin(this.rotation),
-            dist.y * Math.cos(this.rotation) + dist.x * Math.sin(this.rotation)
-          ).mul(20)
-        )
+    // 
+    if (keys[" "] && this.lastShot + this.bulletInterval < Date.now()) {
+      this.lastShot = Date.now()
 
-        const dir = this.position
-          .sub(loc)
-          .unit
-          .mul(-5) // bullet speed
+      // take a shot
+      const dist = new Vector(0, -1)
+      const loc = this.position.add(
+        new Vector(
+          dist.x * Math.cos(this.rotation) - dist.y * Math.sin(this.rotation),
+          dist.y * Math.cos(this.rotation) + dist.x * Math.sin(this.rotation)
+        ).mul(20)
+      )
 
-        const bullet = new Bullet(loc, dir, 2)
-        console.log(bullet);
+      const dir = this.position
+        .sub(loc)
+        .unit
+        .mul(-5) // bullet speed
 
-        this.bullets.push(bullet)
-      }
+      const bullet = new Bullet(loc, dir, 2)
+
+      this.bullets.push(bullet)
     }
 
     if (keys["ArrowLeft"]) {
@@ -96,6 +95,8 @@ class Ship {
     }
 
     this.position = this.position.add(this.velocity)
+
+    // If ship leaves the play area, wrap around
     if (this.position.x < 0) {
       this.position = new Vector(800, this.position.y)
     }
@@ -109,9 +110,10 @@ class Ship {
       this.position = new Vector(this.position.x, 0)
     }
 
+    // Update ship's rotation
     this.rotation += this.rotVelocity
 
-
+    // Update ship's bullets
     this.bullets = this.bullets.map((bullet) => {
       bullet.update()
 
@@ -123,6 +125,7 @@ class Ship {
       return bullet
     }).filter(o => !!o)
 
+    // Update ship's particle spray when moving
     this.particles = this.particles.map((particle) => {
       particle.update()
 
@@ -137,6 +140,7 @@ class Ship {
 
   draw(ctx) {
 
+    // Render a few additional ships for way smoother wrapping
     const modifiers = [
       new Vector(),
       new Vector(0, 800),
@@ -148,11 +152,13 @@ class Ship {
     for (const modifier of modifiers) {
       let points = []
 
+      // Ship's shape
       points.push(new Vector(0, -2))
       points.push(new Vector(1.5, 2))
       points.push(new Vector(0, 1))
       points.push(new Vector(-1.5, 2))
     
+      // Resize and rotate the ship based on its rotation and size
       points = points.map((v) => 
         new Vector(
           v.x * Math.cos(this.rotation) - v.y * Math.sin(this.rotation),
@@ -162,7 +168,7 @@ class Ship {
         .add(this.position.add(modifier))
       )
     
-      shape(ctx, ...points)
+      shape(ctx, "white", ...points)
     }
 
     for (const particle of this.particles) {
