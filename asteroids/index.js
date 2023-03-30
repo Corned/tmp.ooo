@@ -28,7 +28,12 @@ window.addEventListener("keyup", (event) => {
 
 const ship = new Ship()
 let asteroids = [
-  new Asteroid(new Vector(400, 100), 20, 10, 5),
+  new Asteroid(new Vector(400, 100), 40, 10, 1),
+  new Asteroid(new Vector(150, 100), 40, 10, 1),
+  new Asteroid(new Vector(650, 100), 40, 10, 1),
+  new Asteroid(new Vector(400, 700), 40, 10, 1),
+  new Asteroid(new Vector(150, 700), 40, 10, 1),
+  new Asteroid(new Vector(650, 700), 40, 10, 1),
 ]
 
 

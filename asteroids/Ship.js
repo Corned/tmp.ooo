@@ -9,12 +9,12 @@ class Ship {
     this.particles = []
     this.bullets = []
     this.lastShot = 0
-    this.bulletInterval = 1000 / 3
+    this.bulletInterval = 1000 / 60
     this.maxSpeed = 4
   }
 
   update(keys) {
-    this.rotVelocity = 0
+    const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
     // 
     if (keys[" "] && this.lastShot + this.bulletInterval < Date.now()) {
@@ -40,11 +40,15 @@ class Ship {
     }
 
     if (keys["ArrowLeft"]) {
-      this.rotVelocity += -0.05
+      this.rotVelocity += -0.004
     }
 
     if (keys["ArrowRight"]) {
-      this.rotVelocity += 0.05
+      this.rotVelocity += 0.004
+    }
+
+    if (!keys["ArrowLeft"] && !keys["ArrowRight"]) {
+      this.rotVelocity /= 1.02
     }
     
     if (keys["ArrowUp"]) {
@@ -94,6 +98,10 @@ class Ship {
       }
     }
 
+    if (!keys["ArrowUp"]) {
+      this.velocity = this.velocity.div(1.01)
+    }
+
     this.position = this.position.add(this.velocity)
 
     // If ship leaves the play area, wrap around
@@ -111,6 +119,7 @@ class Ship {
     }
 
     // Update ship's rotation
+    this.rotVelocity = clamp(this.rotVelocity, -0.05, 0.05)
     this.rotation += this.rotVelocity
 
     // Update ship's bullets
