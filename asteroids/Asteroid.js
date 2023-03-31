@@ -21,6 +21,9 @@ class Asteroid {
         ).mul(1 + Math.random())
       )
     }
+
+    
+    this.explosionAudio = new Audio("/asteroids/assets/explosion1.wav")
   }
 
   update() {
@@ -72,6 +75,10 @@ class Asteroid {
 
       this.delete = true
       bullet.delete = true
+
+      const clone = this.explosionAudio.cloneNode(true)
+      clone.volume = 0.2
+      clone.play()
 
 
       for (let ax = 0; ax < 40; ax++) {

@@ -9,8 +9,10 @@ class Ship {
     this.particles = []
     this.bullets = []
     this.lastShot = 0
-    this.bulletInterval = 1000 / 60
+    this.bulletInterval = 1000 / 5
     this.maxSpeed = 4
+
+    this.laserShootAudio = new Audio("/asteroids/assets/laserShoot.wav")
   }
 
   update(keys) {
@@ -19,6 +21,10 @@ class Ship {
     // 
     if (keys[" "] && this.lastShot + this.bulletInterval < Date.now()) {
       this.lastShot = Date.now()
+
+      const clone = this.laserShootAudio.cloneNode(true)
+      clone.volume = 0.3
+      clone.play()
 
       // take a shot
       const dist = new Vector(0, -1)
