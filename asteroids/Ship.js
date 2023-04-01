@@ -17,8 +17,7 @@ class Ship {
 
   update(keys) {
     const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-
-    // 
+ 
     if (keys[" "] && this.lastShot + this.bulletInterval < Date.now()) {
       this.lastShot = Date.now()
 
@@ -26,21 +25,17 @@ class Ship {
       clone.volume = 0.3
       clone.play()
 
-      // take a shot
-      const dist = new Vector(0, -1)
-      const loc = this.position.add(
-        new Vector(
-          dist.x * Math.cos(this.rotation) - dist.y * Math.sin(this.rotation),
-          dist.y * Math.cos(this.rotation) + dist.x * Math.sin(this.rotation)
-        ).mul(20)
-      )
+      // direction of the ship
+      const direction = (new Vector(0, -1)).rotate(this.rotation)
+      // get bullet spawn location
+      const bulletSpawnLocation = this.position.add(direction.mul(20))
 
-      const dir = this.position
-        .sub(loc)
+      const bulletVelocity = this.position
+        .sub(bulletSpawnLocation)
         .unit
-        .mul(-5) // bullet speed
+        .mul(-5)
 
-      const bullet = new Bullet(loc, dir, 2)
+      const bullet = new Bullet(bulletSpawnLocation, bulletVelocity, 2) // position, velocity, radius
 
       this.bullets.push(bullet)
     }
@@ -58,48 +53,38 @@ class Ship {
     }
     
     if (keys["ArrowUp"]) {
-      const direction = new Vector(0, -1)
-      this.velocity = this.velocity.add(new Vector(
-        direction.x * Math.cos(this.rotation) - direction.y * Math.sin(this.rotation),
-        direction.y * Math.cos(this.rotation) + direction.x * Math.sin(this.rotation)
-      ).unit.mul(0.1))
+      // direction of the ship
+      const direction = (new Vector(0, -1)).rotate(this.rotation)
+      this.velocity = this.velocity.add(direction.unit.mul(0.1))
 
       if (this.velocity.magnitude > this.maxSpeed) {
         this.velocity = this.velocity.unit.mul(this.maxSpeed)
       }
 
-      for (let ax = 0; ax < 3; ax++) {
-
-
-        const dist = new Vector(0, 10)
-        const loc = this.position.add(
-          new Vector(
-            dist.x * Math.cos(this.rotation) - dist.y * Math.sin(this.rotation),
-            dist.y * Math.cos(this.rotation) + dist.x * Math.sin(this.rotation)
-          )
+      // spawn an amount of particles for exhaust
+      // give them random acceleration to spread them
+      for (let _ = 0; _ < 5; _++) {
+        const backDirection = new Vector(0, 1)
+        const particleSpawnLocation = this.position.add(
+          backDirection.rotate(this.rotation).mul(10)
         )
 
-        const a = 2
-        const b = 1 / a / 2
-        const rand = this.rotation + (Math.random() / a - b)
-        const loc2 = this.position.add(
-          new Vector(
-            dist.x * Math.cos(rand) - dist.y * Math.sin(rand),
-            dist.y * Math.cos(rand) + dist.x * Math.sin(rand)
-          )
-        )
-        const dir = this.position
-        .sub(loc2)
+        const spreadAngle = 45
+        const randomAngleDeg = Math.random() * spreadAngle - spreadAngle / 2
+        const randomAngleRad = randomAngleDeg * Math.PI / 180
+        const randomizedAngle = this.rotation + randomAngleRad
+
+        const particleVelocity = backDirection.rotate(randomizedAngle)
         .unit
-        .mul(-this.maxSpeed - Math.random())
+        .mul(this.maxSpeed - Math.random() + 0.5)
 
         const newParticle = new Particle(
-          loc,
-          dir,
+          particleSpawnLocation,
+          particleVelocity,
           Math.random() * 3,
-          200
+          250
         )
-    
+
         this.particles.push(newParticle)
       }
     }
@@ -154,14 +139,28 @@ class Ship {
   }
 
   draw(ctx) {
+    const rotateVector = (vector, angle) => new Vector(
+      vector.x * Math.cos(angle) - vector.y * Math.sin(angle),
+      vector.y * Math.cos(angle) + vector.x * Math.sin(angle)
+    )
+ 
+    for (const particle of this.particles) {
+      particle.draw(ctx)
+    }
 
     // Render a few additional ships for way smoother wrapping
     const modifiers = [
       new Vector(),
+
       new Vector(0, 800),
       new Vector(0, -800),
       new Vector(800, 0),
       new Vector(-800, 0),
+
+      new Vector(800, 800),
+      new Vector(800, -800),
+      new Vector(-800, -800),
+      new Vector(-800, 800),
     ]
     
     for (const modifier of modifiers) {
@@ -174,11 +173,8 @@ class Ship {
       points.push(new Vector(-1.5, 2))
     
       // Resize and rotate the ship based on its rotation and size
-      points = points.map((v) => 
-        new Vector(
-          v.x * Math.cos(this.rotation) - v.y * Math.sin(this.rotation),
-          v.y * Math.cos(this.rotation) + v.x * Math.sin(this.rotation)
-        )
+      points = points.map((v) =>
+        v.rotate(this.rotation)
         .mul(this.size)
         .add(this.position.add(modifier))
       )
@@ -186,9 +182,7 @@ class Ship {
       shape(ctx, "white", ...points)
     }
 
-    for (const particle of this.particles) {
-      particle.draw(ctx)
-    }
+
 
     for (const bullet of this.bullets) {
       bullet.draw(ctx)

@@ -32,6 +32,13 @@ class Vector {
     )
   }
 
+  rotate(angle) {
+    return new Vector(
+      this.x * Math.cos(angle) - this.y * Math.sin(angle),
+      this.y * Math.cos(angle) + this.x * Math.sin(angle)
+    )
+  }
+
   get magnitude() {
     return Math.sqrt(this.x ** 2 + this.y ** 2)
   } 
