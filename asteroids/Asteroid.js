@@ -12,9 +12,9 @@ class Asteroid {
 
     this.particles = []
 
-    this.edgePoints = []
+    this.shape = []
     for (let i = -Math.PI; i < Math.PI; i += Math.PI/this.corners * 2) {
-      this.edgePoints.push(
+      this.shape.push(
         new Vector(
           radius * Math.cos(i),
           radius * Math.sin(i),
@@ -42,13 +42,11 @@ class Asteroid {
     }).filter(o => !!o)
   }
 
-  collidesWith(bullet) {
+  collidesWith(position) {
     const getArea = (a, b, c) => 0.5 * Math.abs((b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y))
 
-    const points = [ ...this.edgePoints, this.edgePoints[0] ].map(a => a.add(this.position))
+    const points = [ ...this.shape, this.shape[0] ].map(a => a.add(this.position))
 
-    let triangleArea = 0
-    let triangleAreaPoint = 0
     let collides = false
 
     for (let corner = 0; corner < points.length - 1; corner++) {
@@ -58,7 +56,7 @@ class Asteroid {
       const a = this.position
       const b = points[corner] 
       const c = points[corner + 1]
-      const x = bullet.position
+      const x = position
 
       triangleArea += getArea(a, b, c)
       triangleAreaPoint += getArea(x, a, b)
@@ -67,11 +65,14 @@ class Asteroid {
 
       if (triangleAreaPoint - triangleArea < 10) {
         collides = true
-        break
+
+        return [b, c]
       }
     }
 
-    if (collides) {
+    return collides
+
+   /*  if (collides) {
 
       this.delete = true
       bullet.delete = true
@@ -85,10 +86,7 @@ class Asteroid {
 
         const particleSpawnLocation = bullet.position
         const directionAwayFromAsteroid = particleSpawnLocation.sub(this.position).unit.mul(-1)
-
-        const b = particleSpawnLocation
-        const a = this.position
-        const angle = /* Math.atan2(b.y - a.y, b.x - a.x) */ Math.random() * Math.PI * 2
+        const angle = Math.random() * Math.PI * 2
  
         const normalizedRandomizedDirection = new Vector(
             directionAwayFromAsteroid.x * Math.cos(angle) - directionAwayFromAsteroid.y * Math.sin(angle),
@@ -104,12 +102,12 @@ class Asteroid {
     
         this.particles.push(newParticle)
       }
-    }
+    } */
   }
 
   draw(ctx) {
 
-    shape(ctx, "white", ...this.edgePoints.map(point => 
+    shape(ctx, "white", ...this.shape.map(point => 
       point.add(this.position)
     ))
 
@@ -118,7 +116,7 @@ class Asteroid {
     ctx.arc(this.position.x, this.position.y, 2, 0, 2*Math.PI)
     ctx.fill()
     
-    const points = this.edgePoints.map(a => a.add(this.position))
+    const points = this.shape.map(a => a.add(this.position))
     for (const point of points) {
       ctx.strokeStyle = "red"
       ctx.beginPath()
@@ -127,7 +125,7 @@ class Asteroid {
       ctx.stroke()
     } */
 
-    const points2 = [ ...this.edgePoints, this.edgePoints[0] ].map(a => a.add(this.position))
+    const points2 = [ ...this.shape, this.shape[0] ].map(a => a.add(this.position))
 
 
 /*     for (let corner = 0; corner < points2.length - 1; corner++) {

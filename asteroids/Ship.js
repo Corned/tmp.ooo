@@ -9,10 +9,46 @@ class Ship {
     this.particles = []
     this.bullets = []
     this.lastShot = 0
-    this.bulletInterval = 1000 / 5
+    this.bulletInterval = 1000 / 4
     this.maxSpeed = 4
 
     this.laserShootAudio = new Audio("/asteroids/assets/laserShoot.wav")
+
+    this.shape = [
+      new Vector(0, -2),
+      new Vector(1.5, 2),
+      new Vector(0, 1),
+      new Vector(-1.5, 2),
+    ].map((v) => v.mul(this.size))
+  }
+
+  collidesWith(position) {
+    const getArea = (a, b, c) => 0.5 * Math.abs((b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y))
+
+    const points = [ ...this.shape, this.shape[0] ].map(a => a.rotate(this.rotation).add(this.position))
+
+    let collides = false
+
+    for (let corner = 0; corner < points.length - 1; corner++) {
+      let triangleArea = 0
+      let triangleAreaPoint = 0
+  
+      const a = this.position
+      const b = points[corner] 
+      const c = points[corner + 1]
+      const x = position
+
+      triangleArea += getArea(a, b, c)
+      triangleAreaPoint += getArea(x, a, b)
+      triangleAreaPoint += getArea(x, b, c)
+      triangleAreaPoint += getArea(x, c, a)
+
+      if (triangleAreaPoint - triangleArea < 10) {
+        return [b, c]
+      }
+    }
+
+    return collides
   }
 
   update(keys) {
@@ -139,11 +175,6 @@ class Ship {
   }
 
   draw(ctx) {
-    const rotateVector = (vector, angle) => new Vector(
-      vector.x * Math.cos(angle) - vector.y * Math.sin(angle),
-      vector.y * Math.cos(angle) + vector.x * Math.sin(angle)
-    )
- 
     for (const particle of this.particles) {
       particle.draw(ctx)
     }
@@ -164,18 +195,10 @@ class Ship {
     ]
     
     for (const modifier of modifiers) {
-      let points = []
-
-      // Ship's shape
-      points.push(new Vector(0, -2))
-      points.push(new Vector(1.5, 2))
-      points.push(new Vector(0, 1))
-      points.push(new Vector(-1.5, 2))
-    
       // Resize and rotate the ship based on its rotation and size
-      points = points.map((v) =>
-        v.rotate(this.rotation)
-        .mul(this.size)
+      const points = this.shape.map((v) =>
+        v
+        .rotate(this.rotation)
         .add(this.position.add(modifier))
       )
     

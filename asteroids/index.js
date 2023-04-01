@@ -1,7 +1,7 @@
 
 
 const canvas = document.getElementById("game")
-const context = canvas.getContext("2d")
+let context = canvas.getContext("2d")
 
 const size = 800
 const mid = size / 2
@@ -38,7 +38,7 @@ let asteroids = [
 
 
 
-setInterval(() => {
+const a = setInterval(() => {
   context.fillStyle = "black"
   context.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -47,8 +47,108 @@ setInterval(() => {
   for (const asteroid of asteroids) {
     asteroid.update()
     
+    // check if bullet collides with asteroid
     for (const bullet of ship.bullets) {
-      asteroid.collidesWith(bullet)
+      const results = asteroid.collidesWith(bullet.position)
+      if (results) {
+        asteroid.velocity = asteroid.velocity.add(bullet.velocity.unit.mul(0.1))
+        console.log(asteroid.velocity)
+
+        const surface = results[1].sub(results[0]).mul(-1)
+
+        function dotProduct(v1, v2) {
+          return v1.x * v2.x + v1.y * v2.y;
+        }
+
+        function normalVector(v) {
+          return new Vector( -v.y, v.x )
+        }
+      
+
+        const N = normalVector(surface).unit
+        const V = bullet.velocity
+        const R = V.sub( N.mul( dotProduct(V, N) ).mul(2) )
+        
+        bullet.velocity = R
+
+        while (asteroid.collidesWith(bullet.position)) {
+          bullet.position = bullet.position.add(bullet.velocity.unit.mul(0.01))
+        }
+
+        
+/*
+        red: surface
+        green: surface normal
+        blue: reflection (new velocity)
+        yellow: original velocity
+
+        let a = results[0]
+        let b = results[1]
+
+        context.strokeStyle = "red"
+        context.lineWidth = 2
+        context.beginPath()
+        context.moveTo(a.x, a.y)
+        context.lineTo(b.x, b.y)
+        context.stroke()
+
+        a = bullet.position
+        b = bullet.position.add(N.mul(100))
+
+        context.strokeStyle = "green"
+        context.lineWidth = 2
+        context.beginPath()
+        context.moveTo(bullet.position.x, bullet.position.y)
+        context.lineTo(a.x, a.y)
+        context.lineTo(b.x, b.y)
+        context.stroke()
+
+        a = bullet.position
+        b = bullet.position.add(R.unit.mul(100))
+
+        context.strokeStyle = "blue"
+        context.lineWidth = 2
+        context.beginPath()
+        context.moveTo(bullet.position.x, bullet.position.y)
+        context.lineTo(a.x, a.y)
+        context.lineTo(b.x, b.y)
+        context.stroke()
+  
+
+        a = bullet.position
+        b = bullet.position.sub(origVel.unit.mul(100))
+
+        context.strokeStyle = "yellow"
+        context.lineWidth = 2
+        context.beginPath()
+        context.moveTo(bullet.position.x, bullet.position.y)
+        context.lineTo(a.x, a.y)
+        context.lineTo(b.x, b.y)
+        context.stroke() */
+  
+
+        /* context = null */
+      }
+    }
+
+    // check if asteroid collides with ship
+    for (const point of asteroid.shape) {
+      const results = ship.collidesWith(point.add(asteroid.position))
+      if (results) {
+        console.log("ASTEROID CORNER INSIDE SHIP", Math.random())
+
+      }
+    }
+
+    // check if ship collides with asteroid
+    for (const point of ship.shape) {
+      const results = asteroid.collidesWith(point.add(ship.position))
+
+      if (results) {
+        console.log("SHIP CORNER INSIDE ASTEROID", Math.random())
+        
+
+      }
     }
   }
   
