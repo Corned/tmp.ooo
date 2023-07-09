@@ -1,16 +1,18 @@
 import Fragments from "./Fragments.js"
 
-const log = (message) => {
-  const messageLogElement = document.createElement("span")
-  messageLogElement.classList.add("output__message", "message-log")
+const log = (elements) => {
+  const terminalOutputMessageElement = document.createElement("span")
+  terminalOutputMessageElement.classList.add("output__message", "message-log")
 
-  if (typeof message === "object") {
-    for (const element of message) {
-      messageLogElement.appendChild(element)
+  if (elements[Symbol.iterator]) {
+    for (const element of elements) {
+      terminalOutputMessageElement.appendChild(element)
     }
+  } else {
+    terminalOutputMessageElement.appendChild(elements)
   }
 
-  document.getElementById("terminal__output").appendChild(messageLogElement)
+  document.getElementById("terminal__output").appendChild(terminalOutputMessageElement)
   document.getElementById("terminal__output").scrollTo(0, document.getElementById("terminal__output").scrollHeight)
 }
 
@@ -24,7 +26,7 @@ const error = (message) => {
 }
 
 const newLine = () => {
-  log([Fragments.Text(" ")])
+  log(Fragments.Text(" "))
 }
 
 export default { log, error, newLine }

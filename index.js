@@ -43,10 +43,11 @@ window.addEventListener("load", () => {
 
     const commandString = input.value
     input.value = ""
-    Terminal.log([Fragments.Text(`tmp.ooo> ${commandString}`)])
+    Terminal.log(Fragments.Text(`tmp.ooo> ${commandString}`))
 
     history.push(commandString)
     historyPointer = history.length
+
 
 
     try {
