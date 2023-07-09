@@ -1,13 +1,16 @@
+import Fragments from "./Fragments.js"
+
 const log = (message) => {
-  const element = document.createElement("span")
-  element.classList.add("output__message", "message-log")
-  if (typeof message === "string") {
-    element.textContent = message
-  } else {
-    element.innerHTML = message.join("")
+  const messageLogElement = document.createElement("span")
+  messageLogElement.classList.add("output__message", "message-log")
+
+  if (typeof message === "object") {
+    for (const element of message) {
+      messageLogElement.appendChild(element)
+    }
   }
 
-  document.getElementById("terminal__output").appendChild(element)
+  document.getElementById("terminal__output").appendChild(messageLogElement)
   document.getElementById("terminal__output").scrollTo(0, document.getElementById("terminal__output").scrollHeight)
 }
 
@@ -20,4 +23,9 @@ const error = (message) => {
   document.getElementById("terminal__output").scrollTo(0, document.getElementById("terminal__output").scrollHeight)
 }
 
-export default { log, error }
+const newLine = () => {
+  console.log("wtf");
+  log([Fragments.Text(" ")])
+}
+
+export default { log, error, newLine }

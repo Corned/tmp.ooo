@@ -2,7 +2,6 @@ import "/scripts/commands.js"
 import "/scripts/program.js"
 
 import CommandParser from "./terminal/CommandParser.js"
-import Fragment from "./terminal/Fragments.js"
 import Terminal from "./terminal/Terminal.js"
 
 import Commands from "./scripts/commands.js"
@@ -71,7 +70,7 @@ window.addEventListener("load", () => {
       }
     } catch (err) {
       Terminal.error(err.message)
-      Terminal.log(" ")
+      Terminal.newLine()
     }  
 
     return false

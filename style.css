@@ -51,8 +51,8 @@ h1 {
 }
 
 .terminal *::selection {
-  color: black;
-  background-color: rgb(255, 52, 52);
+  color: black !important;
+  background-color: rgb(255, 52, 52) !important;
 }
 
 
@@ -134,3 +134,6 @@ h1 {
 }
 
 
+b {
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
+}

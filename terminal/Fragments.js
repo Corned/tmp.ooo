@@ -1,13 +1,43 @@
 const Text = (message) => {
-  return `<span class="output__message message-log">${message}</span>`
+  const element = document.createElement("span")
+  element.className = "output__message message-log"
+  element.innerText = message
+
+  return element
+}
+
+const Bold = (message) => {
+  const element = document.createElement("b")
+  element.className = "output__message message-log"
+  element.innerText = message
+
+  return element
 }
 
 const Button = (message, actionF) => {
-  return `<span onclick="${actionF}" class="output__message message-button">${message}</span>`
+  const element = document.createElement("span")
+  element.className = "output__message message-button"
+  element.innerText = message
+
+  element.addEventListener("mouseenter", function() {
+    console.log("WOOO")
+  })
+
+  return element
 }
 
 const Link = (message, href) => {
-  return `<a href="${href}" target="_blank" class="output__message message-link">${message}</a>`
+  const element = document.createElement("a")
+  element.className = "output__message message-link"
+  element.innerText = message
+  element.href = href
+
+  return element
 }
 
-export default { Text, Button, Link }
+export default {
+  Text,
+  Bold,
+  Button,
+  Link,
+}

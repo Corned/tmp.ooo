@@ -2,7 +2,7 @@
 import Fragment from "../terminal/Fragments.js"
 import Terminal from "../terminal/Terminal.js"
 
-const { Text, Button, Link } = Fragment
+const { Text, Button, Link, Bold } = Fragment
 
 const RunCommand = (command, params) => {
   const promise = new Promise((resolve, reject) => {
@@ -30,22 +30,25 @@ const SimulateCommand = (command, params = "") => {
 
 const intro = (resolve, reject, params) => {
   const emoticons = [
-    "\＼(◎o◎)／", "(/◕ヮ◕)/", "(︶｡︶✽)", "(●＾o＾●)", "( ͡° ͜ʖ ͡°)", "༼ つ ◕_◕ ༽つ", "¯\\_(ツ)_/¯",
-    "♪~ ᕕ(ᐛ)ᕗ", "┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻", "╰(▔∀▔)╯", "⊂◉‿◉つ", "(✯◡✯)", "°˖✧◝(⁰▿⁰)◜✧˖°",
-    "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧", "( ˘ ³˘)", "♥（ﾉ´∀`）", "┌( ಠ‿ಠ )┘", "₍₍ ◝(・ω・)◟ ⁾⁾", "Σ(-᷅_-᷄ ๑)"
-  ]
+    "°˖✧◝(⁰▿⁰)◜✧˖°",
+  ] 
 
 
-  Terminal.log(`        /\\_/\\    welcome to tmp.ooo! ${emoticons[Math.floor(Math.random() * emoticons.length)]}`)
+  Terminal.log([
+    Text("        /\\_/\\    "),
+    Bold("welcome"),
+    Text(" to tmp.ooo! "),
+    Text(emoticons[Math.floor(Math.random() * emoticons.length)]),
+  ])
 
   Terminal.log([
     Text(`   ____/ o o \\   type "help" or click `),
-    Button("here", `SimulateCommand(help)`),
+    Button("here", () => {}),
     Text(` to get started!`)
   ])
 
-  Terminal.log(` /~____  =ø= /`)
-  Terminal.log(`(______)__m_m)   The cat says it's ${moment().format("dddd")} my dudes!`)
+  Terminal.log([Text(` /~____  =ø= /`)])
+  Terminal.log([Text(`(______)__m_m)   The cat says it's ${moment().format("dddd")} my dudes!`)])
   
   Terminal.log([
     Text(`                 Try out `),
@@ -54,6 +57,8 @@ const intro = (resolve, reject, params) => {
     Link("Couch Potatoes", `https://couchpotatoes.team/`),
     Text(` website!`)
   ])
+
+  Terminal.newLine()
 
   resolve()
 }
