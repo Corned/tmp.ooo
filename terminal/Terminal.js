@@ -24,7 +24,6 @@ const error = (message) => {
 }
 
 const newLine = () => {
-  console.log("wtf");
   log([Fragments.Text(" ")])
 }
 
