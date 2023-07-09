@@ -13,18 +13,19 @@ const RunCommand = (command, params) => {
     .then(() => {
       // TODO: fix bandaid fix
       if (command.name !== "clearTerminal") {
-        Terminal.log(" ")
+        // New line after a command.
+        Terminal.newLine()
       }
     })
     .catch((errorMessage) => {
       Terminal.error(errorMessage)
-      Terminal.log("\n")
+      Terminal.newLine()
       throw errorMessage
     })
 }
 
 const SimulateCommand = (command, params = "") => {
-  Terminal.log(`tmp.ooo> ${command.name} ${params}`)
+  Terminal.log([Text(`tmp.ooo> ${command.name} ${params}`)])
   RunCommand(command, params)
 }
 
@@ -43,7 +44,7 @@ const intro = (resolve, reject, params) => {
 
   Terminal.log([
     Text(`   ____/ o o \\   type "help" or click `),
-    Button("here", () => {}),
+    Button("here", () => SimulateCommand(help)),
     Text(` to get started!`)
   ])
 
@@ -58,24 +59,21 @@ const intro = (resolve, reject, params) => {
     Text(` website!`)
   ])
 
-  Terminal.newLine()
-
   resolve()
 }
 
 const help = (resolve, reject, params) => {
-  Terminal.log([ Button("help", "SimulateCommand(help)"), Text("\t\tLists all available commands") ])
-  Terminal.log([ Button("intro", "SimulateCommand(intro)"), Text("\t\tDisplays the starting message") ])
-  Terminal.log([ Button("clear", "SimulateCommand(clearTerminal)"), Text("\t\tClears the terminal") ])
-  Terminal.log([ Button("ls", "SimulateCommand(ls)"), Text("\t\tLists files in current directory") ])
+  Terminal.log([ Button("help", () => SimulateCommand(help)), Text("\t\tLists all available commands") ])
+  Terminal.log([ Button("intro", () => SimulateCommand(intro)), Text("\t\tDisplays the starting message") ])
+  Terminal.log([ Button("clear", () => SimulateCommand(clearTerminal)), Text("\t\tClears the terminal") ])
+  Terminal.log([ Button("ls", () => SimulateCommand(ls)), Text("\t\tLists files in current directory") ])
   Terminal.log([ Text("cat\t\tReads contents of a file") ])
-  Terminal.log([ Text("parse-flags\tFlag parser demo") ])
 
   resolve()
 }
 
 const ls = (resolve, reject, params) => {
-  Terminal.log("passwords.txt\tprojects.txt") // lol
+  Terminal.log([Text("passwords.txt\tprojects.txt")]) // lol
 
   resolve()
 }
@@ -92,7 +90,7 @@ const cat = (resolve, reject, [ path ]) => {
       throw new Error(`Could not read file "${path}".`)
     })
     .then((text) => {
-      Terminal.log(text)
+      Terminal.log([Text(text)])
       resolve()
     })
     .catch((err) => {

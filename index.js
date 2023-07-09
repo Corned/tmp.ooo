@@ -5,6 +5,7 @@ import CommandParser from "./terminal/CommandParser.js"
 import Terminal from "./terminal/Terminal.js"
 
 import Commands from "./scripts/commands.js"
+import Fragments from "./terminal/Fragments.js"
 
 const RunCommand = Commands.RunCommand
 
@@ -45,7 +46,7 @@ window.addEventListener("load", () => {
 
     const commandString = input.value
     input.value = ""
-    Terminal.log(`tmp.ooo> ${commandString}`)
+    Terminal.log([Fragments.Text(`tmp.ooo> ${commandString}`)])
 
     history.push(commandString)
     historyPointer = history.length
@@ -63,8 +64,6 @@ window.addEventListener("load", () => {
         RunCommand(Commands.clearTerminal)
       } else if (command === "intro") {
         RunCommand(Commands.intro)
-      } else if (command === "parse-flags") {
-        RunCommand(Commands.parseFlags, commandString)
       } else {
         throw new Error(`The term "${command}" is not a valid command.`)
       }

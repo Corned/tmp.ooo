@@ -19,9 +19,7 @@ const Button = (message, actionF) => {
   element.className = "output__message message-button"
   element.innerText = message
 
-  element.addEventListener("mouseenter", function() {
-    console.log("WOOO")
-  })
+  element.onclick = actionF
 
   return element
 }
