@@ -52,9 +52,7 @@ const intro = (resolve, reject, params) => {
   Terminal.log([Text(`(______)__m_m)   The cat says it's ${moment().format("dddd")} my dudes!`)])
   
   Terminal.log([
-    Text(`                 Try out `),
-    Link("Asteroids", `/asteroids.html`),
-    Text(` and check the `),
+    Text(`                 Check out the `),
     Link("Couch Potatoes", `https://couchpotatoes.team/`),
     Text(` website!`)
   ])
