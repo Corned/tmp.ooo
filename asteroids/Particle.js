@@ -8,13 +8,13 @@ class Particle {
     this.delete = false
   }
 
-  update() {
+  update(deltaInSeconds) {
     if (this.delete || this.birth + this.lifetime <= Date.now()) {
       this.delete = true
       return
     }
 
-    this.position = this.position.add(this.velocity)
+    this.position = this.position.add(this.velocity.mul(60 * deltaInSeconds))
 
     if (this.position.x < 0) {
       this.position = new Vector(800, this.position.y)

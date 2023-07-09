@@ -1,30 +1,73 @@
 
 
 const canvas = document.getElementById("game")
-let context = canvas.getContext("2d")
+let context = canvas.getContext("2d", { willReadFrequently: true })
+context.willReadFrequently = true
 
-const size = 800
-const mid = size / 2
-
-let keys = {}
-
-window.addEventListener("blur", () => {
-  keys = {}
+const game = new Game({
+  debug: true,
 })
 
-window.addEventListener("keydown", (event) => {
-  if (event.defaultPrevented) return
-  if (event.repeat) return
+const scene = new Scene()
+scene.addActor(new Ship())
 
-  keys[event.key] = true
-})
+game.setScene(scene)
 
-window.addEventListener("keyup", (event) => {
-  if (event.defaultPrevented) return
-  if (event.repeat) return
 
-  keys[event.key] = null
-})
+const x = 400
+const y = 200
+let r = 100
+
+let frame = 0
+
+let lastUpdate = performance.now()
+const tick = (now) => {
+  const delta = now - lastUpdate
+  const deltaInSeconds = delta / 1000
+
+  frame = frame + 1 * 60 * deltaInSeconds
+
+  lastUpdate = now
+  
+  game.update(delta)
+  game.draw(context)
+  
+  if (game.debug) {
+    const debugMessage = `${Math.floor(1000 / delta)}fps ${delta.toFixed(2)}ms`
+    document.getElementById("debug").innerText = debugMessage
+  }
+  
+  r = 100 + Math.sin(frame / 100) * 50
+  
+  const imgdata = context.getImageData(0, 0, 800, 800)
+
+  const pix = imgdata.data
+
+  for (var i = 0, n = pix.length; i < n; i += 4) {
+    const x1 = Math.floor(i / 4 % 800)
+    const y1 = Math.floor(i / 4 / 800)
+
+    const dist = (new Vector(x1, y1).sub(new Vector(x, y))).magnitude
+
+    if (dist < r) {
+      pix[i  ] = 255 - pix[i  ]; // red
+      pix[i+1] = 255 - pix[i+1]; // green
+      pix[i+2] = 255 - pix[i+2]; // blue
+      // i+3 is alpha (the fourth element)
+
+    }
+
+  }
+
+  context.putImageData(imgdata, 0, 0);
+
+  window.requestAnimationFrame(tick)
+}
+
+window.requestAnimationFrame(tick)
+
+
+/* 
 
 const ship = new Ship()
 let asteroids = [
@@ -44,6 +87,7 @@ const a = setInterval(() => {
 
   // logic
   ship.update(keys)
+
   for (const asteroid of asteroids) {
     asteroid.update()
     
@@ -52,7 +96,6 @@ const a = setInterval(() => {
       const results = asteroid.collidesWith(bullet.position)
       if (results) {
         asteroid.velocity = asteroid.velocity.add(bullet.velocity.unit.mul(0.1))
-        console.log(asteroid.velocity)
 
         const surface = results[1].sub(results[0]).mul(-1)
 
@@ -75,59 +118,6 @@ const a = setInterval(() => {
           bullet.position = bullet.position.add(bullet.velocity.unit.mul(0.01))
         }
 
-        
-/*
-        red: surface
-        green: surface normal
-        blue: reflection (new velocity)
-        yellow: original velocity
-
-        let a = results[0]
-        let b = results[1]
-
-        context.strokeStyle = "red"
-        context.lineWidth = 2
-        context.beginPath()
-        context.moveTo(a.x, a.y)
-        context.lineTo(b.x, b.y)
-        context.stroke()
-
-        a = bullet.position
-        b = bullet.position.add(N.mul(100))
-
-        context.strokeStyle = "green"
-        context.lineWidth = 2
-        context.beginPath()
-        context.moveTo(bullet.position.x, bullet.position.y)
-        context.lineTo(a.x, a.y)
-        context.lineTo(b.x, b.y)
-        context.stroke()
-
-        a = bullet.position
-        b = bullet.position.add(R.unit.mul(100))
-
-        context.strokeStyle = "blue"
-        context.lineWidth = 2
-        context.beginPath()
-        context.moveTo(bullet.position.x, bullet.position.y)
-        context.lineTo(a.x, a.y)
-        context.lineTo(b.x, b.y)
-        context.stroke()
-  
-
-        a = bullet.position
-        b = bullet.position.sub(origVel.unit.mul(100))
-
-        context.strokeStyle = "yellow"
-        context.lineWidth = 2
-        context.beginPath()
-        context.moveTo(bullet.position.x, bullet.position.y)
-        context.lineTo(a.x, a.y)
-        context.lineTo(b.x, b.y)
-        context.stroke() */
-  
-
-        /* context = null */
       }
     }
 
@@ -161,3 +151,4 @@ const a = setInterval(() => {
 }, 1000 / 60)
 
 
+ */

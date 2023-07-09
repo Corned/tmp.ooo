@@ -10,7 +10,7 @@ class Ship {
     this.bullets = []
     this.lastShot = 0
     this.bulletInterval = 1000 / 4
-    this.maxSpeed = 4
+    this.maxSpeed = 5
 
     this.laserShootAudio = new Audio("/asteroids/assets/laserShoot.wav")
 
@@ -20,6 +20,26 @@ class Ship {
       new Vector(0, 1),
       new Vector(-1.5, 2),
     ].map((v) => v.mul(this.size))
+
+    this.keys = {}
+
+    window.addEventListener("blur", () => {
+      this.keys = {}
+    })
+
+    window.addEventListener("keydown", (event) => {
+      if (event.defaultPrevented) return
+      if (event.repeat) return
+
+      this.keys[event.key] = true
+    })
+
+    window.addEventListener("keyup", (event) => {
+      if (event.defaultPrevented) return
+      if (event.repeat) return
+
+      this.keys[event.key] = null
+    })
   }
 
   collidesWith(position) {
@@ -51,10 +71,11 @@ class Ship {
     return collides
   }
 
-  update(keys) {
+  update(delta) {
     const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+    const deltaTimeInSeconds = delta / 1000
  
-    if (keys[" "] && this.lastShot + this.bulletInterval < Date.now()) {
+    if (this.keys[" "] && this.lastShot + this.bulletInterval < Date.now()) {
       this.lastShot = Date.now()
 
       const clone = this.laserShootAudio.cloneNode(true)
@@ -71,31 +92,34 @@ class Ship {
         .unit
         .mul(-5)
 
-      const bullet = new Bullet(bulletSpawnLocation, bulletVelocity, 2) // position, velocity, radius
-
+      // position, velocity, radius
+      const bullet = new Bullet(bulletSpawnLocation, bulletVelocity, 2)
       this.bullets.push(bullet)
     }
 
-    if (keys["ArrowLeft"]) {
-      this.rotVelocity += -0.004
+    if (this.keys["ArrowLeft"]) {
+      this.rotVelocity -= 0.005 * 60 * deltaTimeInSeconds
     }
 
-    if (keys["ArrowRight"]) {
-      this.rotVelocity += 0.004
+    if (this.keys["ArrowRight"]) {
+      this.rotVelocity += 0.005 * 60 * deltaTimeInSeconds
     }
 
-    if (!keys["ArrowLeft"] && !keys["ArrowRight"]) {
-      this.rotVelocity /= 1.02
+
+    if (!this.keys["ArrowLeft"] && !this.keys["ArrowRight"]) {
+      const decayRate = Math.pow(3, -deltaTimeInSeconds)
+      this.rotVelocity *= decayRate
     }
     
-    if (keys["ArrowUp"]) {
+    if (this.keys["ArrowUp"]) {
       // direction of the ship
       const direction = (new Vector(0, -1)).rotate(this.rotation)
-      this.velocity = this.velocity.add(direction.unit.mul(0.1))
+      this.velocity = this.velocity.add(direction.mul(this.acceleration * 60 * deltaTimeInSeconds))
 
       if (this.velocity.magnitude > this.maxSpeed) {
         this.velocity = this.velocity.unit.mul(this.maxSpeed)
       }
+
 
       // spawn an amount of particles for exhaust
       // give them random acceleration to spread them
@@ -125,11 +149,20 @@ class Ship {
       }
     }
 
-    if (!keys["ArrowUp"]) {
-      this.velocity = this.velocity.div(1.01)
+    if (!this.keys["ArrowUp"]) {
+      const decayRate = Math.pow(1.8, -deltaTimeInSeconds)
+      this.velocity = this.velocity.mul(decayRate)
     }
 
-    this.position = this.position.add(this.velocity)
+    // Update ship's rotation
+    this.rotVelocity = clamp(this.rotVelocity, -0.05, 0.05)
+
+
+    const adjustedRotVelocity = 60 * this.rotVelocity * deltaTimeInSeconds
+    const adjustedVelocity = this.velocity.mul(60 * deltaTimeInSeconds)
+
+    this.rotation += adjustedRotVelocity
+    this.position = this.position.add(adjustedVelocity)
 
     // If ship leaves the play area, wrap around
     if (this.position.x < 0) {
@@ -145,13 +178,9 @@ class Ship {
       this.position = new Vector(this.position.x, 0)
     }
 
-    // Update ship's rotation
-    this.rotVelocity = clamp(this.rotVelocity, -0.05, 0.05)
-    this.rotation += this.rotVelocity
-
     // Update ship's bullets
     this.bullets = this.bullets.map((bullet) => {
-      bullet.update()
+      bullet.update(deltaTimeInSeconds)
 
       if (bullet.delete) {
         bullet = null
@@ -163,7 +192,7 @@ class Ship {
 
     // Update ship's particle spray when moving
     this.particles = this.particles.map((particle) => {
-      particle.update()
+      particle.update(deltaTimeInSeconds)
 
       if (particle.delete) {
         particle = null

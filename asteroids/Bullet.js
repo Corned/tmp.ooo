@@ -6,8 +6,8 @@ class Bullet {
     this.delete = false
   }
 
-  update() {
-    this.position = this.position.add(this.velocity)
+  update(deltaInSeconds) {
+    this.position = this.position.add(this.velocity.mul(60 * deltaInSeconds))
 
     if (this.position.x < 0) {
       this.delete = true  
