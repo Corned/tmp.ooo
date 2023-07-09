@@ -1,6 +1,3 @@
-import "/scripts/commands.js"
-import "/scripts/program.js"
-
 import CommandParser from "./terminal/CommandParser.js"
 import Terminal from "./terminal/Terminal.js"
 
