@@ -6,6 +6,7 @@ import intro from "./terminal/commands/intro.js"
 import ls from "./terminal/commands/ls.js"
 import cat from "./terminal/commands/cat.js"
 import clear from "./terminal/commands/clear.js"
+import table from "./terminal/commands/table.js"
 
 
 window.addEventListener("load", () => {
@@ -23,6 +24,7 @@ window.addEventListener("load", () => {
   terminal.loadCommand(ls)
   terminal.loadCommand(cat)
   terminal.loadCommand(clear)
+  terminal.loadCommand(table)
 
   terminal.runCommand("intro")
 

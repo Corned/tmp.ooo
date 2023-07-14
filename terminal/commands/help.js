@@ -4,6 +4,7 @@ const Text = Fragments.Text
 const Bold = Fragments.Bold
 const Link = Fragments.Link
 const Button = Fragments.Button
+const Table = Fragments.Table
 
 const command = (terminal, resolve, reject, params) => {
   if (params && params.length === 0) {
@@ -12,12 +13,14 @@ const command = (terminal, resolve, reject, params) => {
       Bold("HELP command-name")
     ])
 
+    const headers = [ ]
+    const rows = []
+
     for (const command of Object.values(terminal.commands)) {
-      terminal.log([
-        Bold(`${command.name.toUpperCase()}`),
-        Text(`\t${command.help}`)
-      ])
+      rows.push([ Bold(command.name.toUpperCase()), Text(command.help) ])
     }
+
+    terminal.log(Table(headers, rows))
 
     return resolve()
   }
