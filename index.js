@@ -1,28 +1,35 @@
 import CommandParser from "./terminal/CommandParser.js"
 import Terminal from "./terminal/Terminal.js"
 
-import Commands from "./scripts/commands.js"
-import Fragments from "./terminal/Fragments.js"
+import help from "./terminal/commands/help.js"
+import intro from "./terminal/commands/intro.js"
+import ls from "./terminal/commands/ls.js"
+import cat from "./terminal/commands/cat.js"
+import clear from "./terminal/commands/clear.js"
 
-const RunCommand = Commands.RunCommand
 
 window.addEventListener("load", () => {
   const history = [ "help" ]
   let historyPointer = 0
 
-  const input = document.getElementById("terminal-input")
-  const terminal = document.getElementById("terminal")
+  const terminal = new Terminal(
+    document.getElementById("terminal"),
+    document.getElementById("terminal-input"),
+    document.getElementById("terminal-output"),
+  )
 
-  terminal.classList.add("center")
-  input.focus()
+  terminal.loadCommand(intro)
+  terminal.loadCommand(help)
+  terminal.loadCommand(ls)
+  terminal.loadCommand(cat)
+  terminal.loadCommand(clear)
 
-  
-  RunCommand(Commands.intro)
+  terminal.runCommand("intro")
 
   document.addEventListener("keydown", (event) => {
     const { code, target } = event
 
-    if (target.id !== "terminal-input") {
+    if (target.id !== "terminal__input-field") {
       return
     }
 
@@ -36,40 +43,5 @@ window.addEventListener("load", () => {
 
     historyPointer = Math.max(0, Math.min(history.length, historyPointer))
     input.value = history[historyPointer] || ""
-  })
-
-  document.getElementById("form").addEventListener("submit", function(event) {
-    event.preventDefault()
-
-    const commandString = input.value
-    input.value = ""
-    Terminal.log(Fragments.Text(`tmp.ooo> ${commandString}`))
-
-    history.push(commandString)
-    historyPointer = history.length
-
-
-
-    try {
-      const [ command, ...rest ] = CommandParser(commandString)
-      if (command === "help") {
-        RunCommand(Commands.help, rest)
-      } else if (command === "ls") {
-        RunCommand(Commands.ls, rest)
-      } else if (command === "cat") {
-        RunCommand(Commands.cat, rest)
-      } else if (command === "clear") {
-        RunCommand(Commands.clearTerminal)
-      } else if (command === "intro") {
-        RunCommand(Commands.intro)
-      } else {
-        throw new Error(`The term "${command}" is not a valid command.`)
-      }
-    } catch (err) {
-      Terminal.error(err.message)
-      Terminal.newLine()
-    }  
-
-    return false
   })
 })

@@ -1,6 +1,6 @@
 const Text = (message) => {
   const element = document.createElement("span")
-  element.className = "output__message message-log"
+  element.className = "fragment fragment--text"
   element.innerText = message
 
   return element
@@ -8,7 +8,7 @@ const Text = (message) => {
 
 const Bold = (message) => {
   const element = document.createElement("b")
-  element.className = "output__message message-log"
+  element.className = "fragment fragment--bold"
   element.innerText = message
 
   return element
@@ -16,7 +16,7 @@ const Bold = (message) => {
 
 const Button = (message, actionF) => {
   const element = document.createElement("span")
-  element.className = "output__message message-button"
+  element.className = "fragment fragment--button"
   element.innerText = message
 
   element.onclick = actionF
@@ -26,7 +26,7 @@ const Button = (message, actionF) => {
 
 const Link = (message, href) => {
   const element = document.createElement("a")
-  element.className = "output__message message-link"
+  element.className = "fragment fragment--link"
   element.innerText = message
   element.href = href
 
