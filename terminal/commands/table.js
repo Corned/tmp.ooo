@@ -8,14 +8,14 @@ const Table = Fragments.Table
 
 const command = (terminal, resolve, reject, params) => {
 
-  const headers = [ "Name", "Age", "Job" ].map(Bold)
+  const headers = [ "Age", "Job", "Name" ].map(Bold)
   const rows = [
-    [ "John", "32", "Developer" ],
-    [ "Jane", "28", "Designer" ],
-    [ "Jack", "45", "Manager" ],
-    [ "Jill", "33", "Developer" ],
-    [ "James", "29", "Designer" ],
-    [ "Jenny", "44", "Manager" ],
+    [ "32", "Developer", "John" ],
+    [ "28", "Designer", "Jane" ],
+    [ "45", "Manager", "Jack" ],
+    [ "33", "Developer", "Jill" ],
+    [ "29", "Designer", "James" ],
+    [ "44", "Manager", "Jenny" ],
   ].map(row => row.map(Text))
 
   terminal.log(Table(headers, rows))

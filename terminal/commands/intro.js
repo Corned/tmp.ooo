@@ -26,11 +26,11 @@ const command = (terminal, resolve, reject, params) => {
   terminal.log([Text(` /~____  =ø= /`)])
   terminal.log([Text(`(______)__m_m)   The cat says it's ${moment().format("dddd")} my dudes!`)])
   
-  terminal.log([
+/*   terminal.log([
     Text(`                 Check out the `),
     Link("Couch Potatoes", `https://couchpotatoes.team/`),
     Text(` website!`)
-  ])
+  ]) */
 
   resolve()
 }

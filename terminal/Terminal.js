@@ -34,7 +34,7 @@ class Terminal {
       if (this.commands[commandName]) {
         this.runCommand(commandName, rest)
       } else {
-        throw new Error(`The term "${commandName}" is not a valid command.`)
+        throw new Error(`"${commandName}" is not recognized as an internal or external command, operable program or batch file.`)
       }
     } catch (err) {
       this.error(Fragments.Text(err.message))
@@ -52,11 +52,11 @@ class Terminal {
       .then(() => {
         // Command was run successfully.
         // New line after a command only if it's not clear.
-        if (commandName === "clear") {
-          return
+        if (commandName !== "clear") {
+          this.newLine()
         }
 
-        this.newLine()
+        /* this.log(Fragments.Text("/home/user")) */
       })
       .catch((errorMessage) => {
         console.log(errorMessage);
