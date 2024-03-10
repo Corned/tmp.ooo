@@ -7,6 +7,7 @@ import ls from "./terminal/commands/ls.js"
 import cat from "./terminal/commands/cat.js"
 import clear from "./terminal/commands/clear.js"
 import table from "./terminal/commands/table.js"
+import mazegen from "./terminal/commands/maze-gen.js"
 
 
 window.addEventListener("load", () => {
@@ -25,6 +26,7 @@ window.addEventListener("load", () => {
   terminal.loadCommand(cat)
   terminal.loadCommand(clear)
   terminal.loadCommand(table)
+  terminal.loadCommand(mazegen)
 
   terminal.runCommand("intro")
 
