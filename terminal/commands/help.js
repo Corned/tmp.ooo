@@ -8,10 +8,10 @@ const Table = Fragments.Table
 
 const command = (terminal, resolve, reject, params) => {
   if (params && params.length === 0) {
-    terminal.log([
+/*     terminal.log([
       Text("For more information on a specific command, type "),
       Bold("HELP command-name")
-    ])
+    ]) */
 
     const headers = [ ]
     const rows = []

@@ -19,18 +19,19 @@ const command = (terminal, resolve, reject, params) => {
 
   terminal.log([
     Text(`   ____/ o o \\   type "help" or click `),
-    Button("here", () => SimulateCommand(help)),
+    Button("here", () => terminal.runCommand("help")),
+    //Button("here", () => SimulateCommand(help)),
     Text(` to get started!`)
   ])
 
   terminal.log([Text(` /~____  =ø= /`)])
   terminal.log([Text(`(______)__m_m)   The cat says it's ${moment().format("dddd")} my dudes!`)])
   
-/*   terminal.log([
-    Text(`                 Check out the `),
-    Link("Couch Potatoes", `https://couchpotatoes.team/`),
-    Text(` website!`)
-  ]) */
+  terminal.log([
+    Text(`                 Click `),
+    Button("here", () => terminal.runCommand("cat", [ "projects.txt" ])),
+    Text(` to see some of my projects!`)
+  ])
 
   resolve()
 }
