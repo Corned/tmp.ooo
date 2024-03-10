@@ -29,17 +29,18 @@ const Link = (message, href) => {
   element.className = "fragment fragment--link"
   element.innerText = message
   element.href = href
+  element.target = "_blank"
 
   return element
 }
 
-const Table = (headers, rows) => {
+const Table = (headers, rows, columnPadding = 1) => {
   const element = document.createElement("table")
   element.className = "fragment fragment--table"
 
   const headerRow = document.createElement("tr")
-  for (const header of headers) {
-    header.innerText = header.innerText + " "
+  for (const [ index, header ] of headers.entries()) {
+    header.innerText = header.innerText + (index === headers.length - 1 ? "" : " ".repeat(columnPadding))
     const headerCell = document.createElement("th")
     headerCell.appendChild(header)
     headerRow.appendChild(headerCell)
@@ -49,8 +50,8 @@ const Table = (headers, rows) => {
 
   for (const row of rows) {
     const tableRow = document.createElement("tr")
-    for (const cell of row) {
-      cell.innerText = cell.innerText + " "
+    for (const [ index, cell ] of row.entries()) {
+      cell.innerText = cell.innerText + (index === row.length - 1 ? "" : " ".repeat(columnPadding))
       const tableCell = document.createElement("td")
       tableCell.appendChild(cell)
       tableRow.appendChild(tableCell)
