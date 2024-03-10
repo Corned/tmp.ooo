@@ -1,3 +1,10 @@
-couch potatoes https://couchpotatoes.team/
-dungeons https://dungeons.tmp.ooo/
-
+§[ "Text", "Text", "Link" ]
+github
+My GitHub page!
+https://github.com/Corned/
+tmp.ooo
+This one's the exact website you're currently visiting!
+https://tmp.ooo/
+dungeons
+Dungeons is a randomly generated puzzle game.
+https://dungeons.tmp.ooo/
