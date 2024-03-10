@@ -42,7 +42,7 @@ class Terminal {
     }  
   }
 
-  runCommand(commandName, params) {
+  runCommand(commandName, params = []) {
     const promise = new Promise((resolve, reject) => {
       const commandFn = this.commands[commandName].fn
       commandFn(this, resolve, reject, params)
