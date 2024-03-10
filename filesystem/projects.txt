@@ -8,3 +8,6 @@ https://tmp.ooo/
 dungeons
 Dungeons is a randomly generated puzzle game.
 https://dungeons.tmp.ooo/
+statwatch
+A cool looking navigation bar for a future project.
+https://statwatch.tmp.ooo/
