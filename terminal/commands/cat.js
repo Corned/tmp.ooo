@@ -36,7 +36,7 @@ const command = (terminal, resolve, reject, params) => {
           rows.push(row)
         }
 
-        terminal.log(Table([], rows))
+        terminal.log(Table([], rows, 2))
 
         return resolve()
       }
