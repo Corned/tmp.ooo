@@ -103,6 +103,14 @@ h1 {
   text-transform: uppercase;
 }
 
+.fragment--button {
+  text-decoration: underline;
+}
+
+.fragment--button:hover {
+  cursor: pointer;
+}
+
 table {
   border-spacing: 0 50px;
 }
