@@ -11,3 +11,6 @@ https://dungeons.tmp.ooo/
 statwatch
 A cool looking navigation bar for a future project.
 https://statwatch.tmp.ooo/
+pacman?
+A graph based pacman clone + /mapmaker.html. A work in progress.
+https://pacman.tmp.ooo/
