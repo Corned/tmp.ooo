@@ -14,3 +14,6 @@ https://statwatch.tmp.ooo/
 pacman?
 A graph based pacman clone + /mapmaker.html. A work in progress.
 https://pacman.tmp.ooo/
+navi
+A link sharing website, authentication through GitHub.
+https://navi.tmp.ooo/
